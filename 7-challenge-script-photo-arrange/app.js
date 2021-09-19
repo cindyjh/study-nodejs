@@ -15,7 +15,6 @@ if (!fs.existsSync(targetDirPath)) {
     console.log('folder does not exist.')
     exit;
 }
-const fileNames = fs.readdirSync(targetDirPath)
 
 // make directory
 makeDirectory(targetDirPath, 'video')
@@ -23,6 +22,7 @@ makeDirectory(targetDirPath, 'captured')
 makeDirectory(targetDirPath, 'duplicated')
 
 // 확장자 별로 정리
+const fileNames = fs.readdirSync(targetDirPath)
 fileNames.forEach((fileName) => {
     const extension = path.extname(fileName)
     switch (extension) {
