@@ -1,6 +1,7 @@
 import express from 'express'
 import fs from 'fs'
 import fsAsync from 'fs/promises'
+import {} from 'express-async-errors' // import만 하면 middleware에서 promise를 return 하는 경우, 마지막에 error를 감지할 수 있도록 해준다. 중요한 점은 return을 해야 한다는 점이다
 
 const app = express()
 
@@ -43,16 +44,10 @@ app.get('/file1', (req, res) => {
 })
 
 app.get('/file2', (req, res, next) => {
-    // promise도 마찬가지로 비동기이므로 catch에서 error 핸들링을 해줘야 한다.
-    fsAsync
-        .readFile('.file.txt')
-        .then(data => {})
-        .catch(next)
+    return fsAsync.readFile('.file.txt')
 })
 
 app.get('/file3', async (req, res) => {
-    // await 자체는 동기적이나, 해당 middleware 자체가 promise이기 때문(async 함수이기 때문에)
-    // error를 잡으려면 file4를 보시라
     const data = await fsAsync.readFile('.file.txt')
 })
 
