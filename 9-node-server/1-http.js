@@ -25,10 +25,8 @@ const server = http.createServer((req, res) => {
         // res.write('</html>')
         // res.end()
     } else if (url === '/courses') {
-        res.setHeader('Content-Type', 'text/html')
         fs.createReadStream('./html/courses.html').pipe(res)
     } else {
-        res.setHeader('Content-Type', 'text/html')
         fs.createReadStream('./html/not-found.html').pipe(res)
     }
 
