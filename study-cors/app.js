@@ -1,11 +1,15 @@
 import express from 'express'
 import cors from 'cors'
-
+import cookieParser from 'cookie-parser'
+import morgan from 'morgan' // 사용자에게 요청을 받을 때마다 어떤 요청을 받았는지, 얼마나 걸렸는지에 관한 유용한 정보를 자동으로 로그로 남겨준다.
+import helmet from 'helmet' // 보안에 필요한 헤더들을 추가해준다.
 
 const app = express()
 app.use(express.json()) // REST API -> Body parse
 app.use(express.urlencoded({ extended: false })) // HTML Form에서 Submmit을 하게 되면 발생하는 request를 Body 안으로 자동으로 parse 해줌.
-
+app.use(cookieParser())
+app.use(morgan('combined')) // https://github.com/expressjs/morgan
+app.use(helmet()) // https://www.npmjs.com/package/helmet
 // ### CORS Policy
 
 // - 브라우저에서만 가지고 있는 정책
@@ -30,7 +34,9 @@ app.use(cors({
 }))
 
 app.use('/', (req, res, next) => {
-    console.log('test')
+    console.log(req.body)
+    console.log(req.cookies)
+    console.log(req.cookies.yummy_cookie)
     res.send('Welcome')
 })
 
