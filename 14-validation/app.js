@@ -5,6 +5,16 @@ const app = express()
 
 app.use(express.json())
 
+const validate = (req, res, next) => {
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
+        return next()
+    }
+
+    return res.status(400).json({message: errors.array()})
+    // return res.status(400).json({message: errors.array()[0].msg})
+}
+
 app.post('/users',
     [
         body('name')
@@ -18,13 +28,11 @@ app.post('/users',
             .withMessage("숫자를 입력해주세요"),
         body('email')
             .isEmail().withMessage('이메일 형식에 맞지 않습니다.'),
-        body('job.name').notEmpty()
+        body('job.name').notEmpty(),
+        validate
     ],
     (req, res, next) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({message: errors.array()})
-        }
+        
         console.log(req.body)
         if (req.body.email)
         res.sendStatus(201)
@@ -32,13 +40,10 @@ app.post('/users',
 
 app.get('/:email',
 [
-    param('email').isEmail().withMessage('이메일 필요함.')
+    param('email').isEmail().withMessage('이메일 필요함.'),
+    validate
 ]
 , (req, res, next) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({message: errors.array()})
-    }
     res.send('❤')
 })
 app.listen(8080)
